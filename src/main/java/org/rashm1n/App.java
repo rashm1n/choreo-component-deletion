@@ -80,22 +80,26 @@ public class App
 ////            log.error(e.getMessage());
 //        }
 //
+        System.out.println("Fetching components ...");
 
         JsonObject response = callGraphQL(accessToken,Utils.getComponentsQuery(orgHandler,projectId),choreoCpProjectsEndpoint);
 
         JsonArray componentArray = response.getAsJsonObject("data").
                 getAsJsonArray("components");
 
+        System.out.println("Components fetched ...");
+
         for (int i=0;i<componentArray.size();i++) {
             JsonObject component = componentArray.get(i).getAsJsonObject();
-            System.out.println(component.toString());
+            System.out.println("Component - "+component.toString());
             Instant createdTime = Instant.parse(component.get("createdAt").getAsString());
 
             Instant currentTime = Instant.now();
             long timeDifference = ChronoUnit.DAYS.between(createdTime,currentTime);
-            System.out.println(timeDifference);
+            System.out.println("Time difference in Days -" + timeDifference);
 
             if (timeDifference==0) {
+                System.out.println("Deleting component - "+component.get("id").getAsString());
                 callGraphQL(accessToken,Utils.getDeleteComponentMutation(
                         component.get("id").getAsString(),
                         component.get("orgHandler").getAsString(),
@@ -108,9 +112,6 @@ public class App
                 }
             }
         }
-
-        Instant i = Instant.now();
-        System.out.println(i);
     }
 
     public static JsonObject callGraphQL(String accessToken, String gqlQuery, String choreoCpProjectsEndpoint)  {
