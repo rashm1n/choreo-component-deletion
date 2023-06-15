@@ -35,7 +35,7 @@ public class App
         Yaml yaml = new Yaml();
         InputStream in = null;
         try {
-            in = new FileInputStream(new File("test.yaml"));
+            in = new FileInputStream(new File("config.yaml"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
